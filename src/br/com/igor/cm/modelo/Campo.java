@@ -3,6 +3,8 @@ package br.com.igor.cm.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.igor.cm.excecao.ExplosaoException;
+
 public class Campo {
 	private final int linha;
 	private final int coluna;
@@ -25,8 +27,7 @@ public class Campo {
 		int deltalinha = Math.abs(linha - vizinho.linha);
 		int deltacoluna = Math.abs(coluna - vizinho.coluna);
 		int deltaGeral = deltalinha + deltacoluna;
-		
-		
+				
 		if(deltaGeral == 1 && !diagonal) {
 			vizinhos.add(vizinho);
 			return true;
@@ -36,6 +37,45 @@ public class Campo {
 		}else {
 			return false;
 		}
+	
+      }
+	
+	void alternarmarcacao() {
+		if(!aberto) {
+			marcado = !marcado;
+		}
+	}
+	boolean abrir() {
+	  if(!marcado && !aberto) {
+		  aberto = true;
+		  if(minado) {
+			  throw new ExplosaoException();
+		  }
+		  if(vizinhacaSegura()) {
+			  vizinhos.forEach(v -> v.abrir());
+		  }
+		  return true;
+	  }else {
+		  return false;
+	  }
 	}
 	
+	boolean vizinhacaSegura() {
+		return vizinhos.stream().noneMatch(v -> v.minado);
+	}
+	
+	public boolean isMarcado() {
+		return marcado;
+	}
+	public boolean isAberto() {
+		return aberto;
+	}
+	public void minar() {
+		minado = true;
+	}
 }
+	
+	
+	
+	
+	
