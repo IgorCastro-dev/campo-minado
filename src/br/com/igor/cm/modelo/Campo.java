@@ -73,6 +73,43 @@ public class Campo {
 	public void minar() {
 		minado = true;
 	}
+
+	public int getLinha() {
+		return linha;
+	}
+
+	public int getColuna() {
+		return coluna;
+	}
+	public boolean objetivoAlcancado() {
+		boolean desvendado = aberto && !minado;
+		boolean protegido = minado && marcado;
+		return (desvendado||protegido);
+	}
+	long minasNaVizinhaca(){
+		return vizinhos.stream().filter(v -> v.minado).count();
+	}
+	void reiniciar() {
+		marcado = false;
+		minado = false;
+		aberto = false;
+	}
+	@Override
+	public String toString() {
+		if(marcado) {
+			return "X";
+		}else if(aberto && minado) {
+			return "*";
+		}else if(aberto && minasNaVizinhaca()>0) {
+			return Long.toString(minasNaVizinhaca());
+		}else if(aberto) {
+			return " ";
+		}else {
+			return "?";
+		}
+	}
+	
+	
 }
 	
 	
